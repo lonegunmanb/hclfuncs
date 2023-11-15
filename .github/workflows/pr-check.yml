@@ -28,7 +28,7 @@ jobs:
         with:
           languages: go
       - name: Run build
-        run: go build github.com/Azure/grept
+        run: go build github.com/lonegunmanb/hclfuncs
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@74483a38d39275f33fcff5f35b679b5ca4a26a99 #v2.22.5
       - name: Run tests
