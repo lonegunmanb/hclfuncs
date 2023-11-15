@@ -1,6 +1,7 @@
 package hclfuncs
 
 import (
+	"codeberg.org/6543/go-yaml2json"
 	"errors"
 	"fmt"
 	"github.com/jehiah/go-strftime"
@@ -124,6 +125,7 @@ func Functions(baseDir string) map[string]function.Function {
 		"vault":           VaultFunc,
 		"yamldecode":      ctyyaml.YAMLDecodeFunc,
 		"yamlencode":      ctyyaml.YAMLEncodeFunc,
+		"yaml2json":       YAML2JsonFunc,
 		"zipmap":          stdlib.ZipmapFunc,
 		"compliment":      ComplimentFunction,
 		"env":             EnvFunction,
@@ -427,5 +429,30 @@ var VaultFunc = function.New(&function.Spec{
 		val, err := commontpl.Vault(path, key)
 
 		return cty.StringVal(val), err
+	},
+})
+
+var YAML2JsonFunc = function.New(&function.Spec{
+	Params: []function.Parameter{
+		{
+			Name: "src",
+			Type: cty.String,
+		},
+	},
+	Type: func(args []cty.Value) (cty.Type, error) {
+		if !args[0].IsKnown() {
+			return cty.DynamicPseudoType, nil
+		}
+		if args[0].IsNull() {
+			return cty.NilType, function.NewArgErrorf(0, "YAML source code cannot be null")
+		}
+		return cty.String, nil
+	},
+	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
+		json, err := yaml2json.Convert([]byte(args[0].AsString()))
+		if err != nil {
+			return cty.NilVal, err
+		}
+		return cty.StringVal(string(json)), nil
 	},
 })
