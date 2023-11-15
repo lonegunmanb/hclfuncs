@@ -18,7 +18,7 @@ func TestFunction_Env(t *testing.T) {
 	exp, diag := hclsyntax.ParseExpression([]byte(code), "test.hcl", hcl.InitialPos)
 	require.False(t, diag.HasErrors())
 	value, diag := exp.Value(&hcl.EvalContext{
-		Functions: functions("."),
+		Functions: Functions("."),
 	})
 	require.False(t, diag.HasErrors())
 	assert.Equal(t, v, value.AsString())
@@ -38,14 +38,14 @@ func TestFunction_EnvShouldHonorGoroutineLocalEnv(t *testing.T) {
 			"TEST_ENV": v1,
 		})
 		value, diag := exp.Value(&hcl.EvalContext{
-			Functions: functions("."),
+			Functions: Functions("."),
 		})
 		require.False(t, diag.HasErrors())
 		assert.Equal(t, v1, value.AsString())
 		done <- struct{}{}
 	}()
 	value, diag := exp.Value(&hcl.EvalContext{
-		Functions: functions("."),
+		Functions: Functions("."),
 	})
 	require.False(t, diag.HasErrors())
 	assert.Equal(t, v0, value.AsString())
@@ -64,7 +64,7 @@ func TestFunction_Compliment(t *testing.T) {
 	code := `compliment([2, 4, 6, 8, 10, 12], [4, 6, 8], [12])`
 	exp, diag := hclsyntax.ParseExpression([]byte(code), "test.hcl", hcl.InitialPos)
 	require.False(t, diag.HasErrors())
-	value, diag := exp.Value(&hcl.EvalContext{Functions: functions(".")})
+	value, diag := exp.Value(&hcl.EvalContext{Functions: Functions(".")})
 	require.False(t, diag.HasErrors())
 	slice := value.AsValueSlice()
 	assert.Len(t, slice, 2)

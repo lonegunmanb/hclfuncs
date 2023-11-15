@@ -35,7 +35,7 @@ func init() {
 	InitTime = time.Now().UTC()
 }
 
-func functions(baseDir string) map[string]function.Function {
+func Functions(baseDir string) map[string]function.Function {
 	r := map[string]function.Function{
 		"abs":             stdlib.AbsoluteFunc,
 		"abspath":         filesystem.AbsPathFunc,
