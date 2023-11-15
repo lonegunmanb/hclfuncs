@@ -1,12 +1,13 @@
 package hclfuncs
 
 import (
-	"github.com/google/uuid"
-	"github.com/hashicorp/hcl/v2"
-	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/hclsyntax"
+	"github.com/hashicorp/packer-plugin-sdk/json"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -72,4 +73,26 @@ func TestFunction_Compliment(t *testing.T) {
 	i1, _ := slice[1].AsBigFloat().Int64()
 	assert.Equal(t, int64(2), i0)
 	assert.Equal(t, int64(10), i1)
+}
+
+func TestFunction_Yaml2Json(t *testing.T) {
+	code := `yaml2json("name: build\n\non:\n  push:\n    branches:\n        - main\n  pull_request:\n")`
+	exp, diag := hclsyntax.ParseExpression([]byte(code), "test.hcl", hcl.InitialPos)
+	require.False(t, diag.HasErrors())
+	value, diag := exp.Value(&hcl.EvalContext{Functions: Functions(".")})
+	require.False(t, diag.HasErrors())
+	j := value.AsString()
+	m := make(map[string]any)
+	err := json.Unmarshal([]byte(j), &m)
+	require.NoError(t, err)
+	expected := map[string]any{
+		"name": "build",
+		"on": map[string]any{
+			"push": map[string]any{
+				"branches": []any{"main"},
+			},
+			"pull_request": nil,
+		},
+	}
+	assert.Equal(t, expected, m)
 }
