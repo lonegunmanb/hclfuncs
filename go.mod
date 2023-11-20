@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	codeberg.org/6543/go-yaml2json v1.0.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.4.0
 	github.com/hashicorp/go-cty-funcs v0.0.0-20230405223818-a090f58aa992
 	github.com/hashicorp/hcl/v2 v2.19.1
 	github.com/hashicorp/packer-plugin-sdk v0.5.1
