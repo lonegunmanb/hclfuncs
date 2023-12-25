@@ -30,7 +30,7 @@ import (
 // match for a single build.
 var InitTime time.Time
 
-var GoroutineLocalEnv = routine.NewThreadLocal()
+var GoroutineLocalEnv = routine.NewThreadLocal[any]()
 
 func init() {
 	InitTime = time.Now().UTC()
