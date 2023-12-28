@@ -30,7 +30,7 @@ import (
 // match for a single build.
 var InitTime time.Time
 
-var GoroutineLocalEnv = routine.NewThreadLocal[any]()
+var GoroutineLocalEnv = routine.NewThreadLocal[map[string]string]()
 
 func init() {
 	InitTime = time.Now().UTC()
@@ -185,7 +185,7 @@ var EnvFunction = function.New(&function.Spec{
 		envKey := key.AsString()
 		localEnv := GoroutineLocalEnv.Get()
 		if localEnv != nil {
-			if env, ok := (localEnv.(map[string]string))[envKey]; ok {
+			if env, ok := localEnv[envKey]; ok {
 				return cty.StringVal(env), nil
 			}
 		}
