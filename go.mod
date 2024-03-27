@@ -6,7 +6,7 @@ require (
 	codeberg.org/6543/go-yaml2json v1.0.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty-funcs v0.0.0-20230405223818-a090f58aa992
-	github.com/hashicorp/hcl/v2 v2.20.0
+	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/hashicorp/packer-plugin-sdk v0.5.2
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869
 	github.com/stretchr/testify v1.9.0
