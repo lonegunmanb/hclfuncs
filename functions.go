@@ -38,6 +38,8 @@ func init() {
 
 func Functions(baseDir string) map[string]function.Function {
 	r := map[string]function.Function{
+		"alltrue":         AllTrueFunc,
+		"anytrue":         AnyTrueFunc,
 		"abs":             stdlib.AbsoluteFunc,
 		"abspath":         filesystem.AbsPathFunc,
 		"basename":        filesystem.BasenameFunc,
@@ -454,5 +456,68 @@ var YAML2JsonFunc = function.New(&function.Spec{
 			return cty.NilVal, err
 		}
 		return cty.StringVal(string(json)), nil
+	},
+})
+
+// AllTrueFunc constructs a function that returns true if all elements of the
+// list are true. If the list is empty, return true.
+var AllTrueFunc = function.New(&function.Spec{
+	Params: []function.Parameter{
+		{
+			Name: "list",
+			Type: cty.List(cty.Bool),
+		},
+	},
+	Type: function.StaticReturnType(cty.Bool),
+	Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
+		result := cty.True
+		for it := args[0].ElementIterator(); it.Next(); {
+			_, v := it.Element()
+			if !v.IsKnown() {
+				return cty.UnknownVal(cty.Bool), nil
+			}
+			if v.IsNull() {
+				return cty.False, nil
+			}
+			result = result.And(v)
+			if result.False() {
+				return cty.False, nil
+			}
+		}
+		return result, nil
+	},
+})
+
+// AnyTrueFunc constructs a function that returns true if any element of the
+// list is true. If the list is empty, return false.
+var AnyTrueFunc = function.New(&function.Spec{
+	Params: []function.Parameter{
+		{
+			Name: "list",
+			Type: cty.List(cty.Bool),
+		},
+	},
+	Type: function.StaticReturnType(cty.Bool),
+	Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
+		result := cty.False
+		var hasUnknown bool
+		for it := args[0].ElementIterator(); it.Next(); {
+			_, v := it.Element()
+			if !v.IsKnown() {
+				hasUnknown = true
+				continue
+			}
+			if v.IsNull() {
+				continue
+			}
+			result = result.Or(v)
+			if result.True() {
+				return cty.True, nil
+			}
+		}
+		if hasUnknown {
+			return cty.UnknownVal(cty.Bool), nil
+		}
+		return result, nil
 	},
 })
