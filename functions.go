@@ -1,10 +1,9 @@
 package hclfuncs
 
 import (
-	"codeberg.org/6543/go-yaml2json"
-	"errors"
 	"fmt"
-	"github.com/jehiah/go-strftime"
+	"github.com/hashicorp/go-cty-funcs/uuid"
+	ctyyaml "github.com/zclconf/go-cty-yaml"
 	"os"
 	"time"
 
@@ -13,12 +12,10 @@ import (
 	"github.com/hashicorp/go-cty-funcs/crypto"
 	"github.com/hashicorp/go-cty-funcs/encoding"
 	"github.com/hashicorp/go-cty-funcs/filesystem"
-	"github.com/hashicorp/go-cty-funcs/uuid"
 	"github.com/hashicorp/hcl/v2/ext/tryfunc"
 	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	commontpl "github.com/hashicorp/packer-plugin-sdk/template"
 	"github.com/timandy/routine"
-	ctyyaml "github.com/zclconf/go-cty-yaml"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/convert"
 	"github.com/zclconf/go-cty/cty/function"
@@ -38,131 +35,124 @@ func init() {
 
 func Functions(baseDir string) map[string]function.Function {
 	r := map[string]function.Function{
-		"alltrue":         AllTrueFunc,
-		"anytrue":         AnyTrueFunc,
-		"abs":             stdlib.AbsoluteFunc,
-		"abspath":         filesystem.AbsPathFunc,
-		"basename":        filesystem.BasenameFunc,
-		"base64decode":    encoding.Base64DecodeFunc,
-		"base64encode":    encoding.Base64EncodeFunc,
-		"bcrypt":          crypto.BcryptFunc,
-		"can":             tryfunc.CanFunc,
-		"ceil":            stdlib.CeilFunc,
-		"chomp":           stdlib.ChompFunc,
-		"chunklist":       stdlib.ChunklistFunc,
-		"cidrhost":        cidr.HostFunc,
-		"cidrnetmask":     cidr.NetmaskFunc,
-		"cidrsubnet":      cidr.SubnetFunc,
-		"cidrsubnets":     cidr.SubnetsFunc,
-		"coalesce":        collection.CoalesceFunc,
-		"coalescelist":    stdlib.CoalesceListFunc,
-		"compact":         stdlib.CompactFunc,
-		"concat":          stdlib.ConcatFunc,
-		"consul_key":      ConsulFunc,
-		"contains":        stdlib.ContainsFunc,
-		"convert":         typeexpr.ConvertFunc,
-		"csvdecode":       stdlib.CSVDecodeFunc,
-		"dirname":         filesystem.DirnameFunc,
-		"distinct":        stdlib.DistinctFunc,
-		"element":         stdlib.ElementFunc,
-		"file":            filesystem.MakeFileFunc(baseDir, false),
-		"fileexists":      filesystem.MakeFileExistsFunc(baseDir),
-		"fileset":         filesystem.MakeFileSetFunc(baseDir),
-		"flatten":         stdlib.FlattenFunc,
-		"floor":           stdlib.FloorFunc,
-		"format":          stdlib.FormatFunc,
-		"formatdate":      stdlib.FormatDateFunc,
-		"formatlist":      stdlib.FormatListFunc,
-		"indent":          stdlib.IndentFunc,
-		"index":           IndexFunc, // stdlib.IndexFunc is not compatible
-		"join":            stdlib.JoinFunc,
-		"jsondecode":      stdlib.JSONDecodeFunc,
-		"jsonencode":      stdlib.JSONEncodeFunc,
-		"keys":            stdlib.KeysFunc,
-		"legacy_isotime":  LegacyIsotimeFunc,
-		"legacy_strftime": LegacyStrftimeFunc,
-		"length":          LengthFunc,
-		"log":             stdlib.LogFunc,
-		"lookup":          stdlib.LookupFunc,
-		"lower":           stdlib.LowerFunc,
-		"max":             stdlib.MaxFunc,
-		"md5":             crypto.Md5Func,
-		"merge":           stdlib.MergeFunc,
-		"min":             stdlib.MinFunc,
-		"parseint":        stdlib.ParseIntFunc,
-		"pathexpand":      filesystem.PathExpandFunc,
-		"pow":             stdlib.PowFunc,
-		"range":           stdlib.RangeFunc,
-		"reverse":         stdlib.ReverseListFunc,
-		"replace":         stdlib.ReplaceFunc,
-		"regex":           stdlib.RegexFunc,
-		"regexall":        stdlib.RegexAllFunc,
-		"regex_replace":   stdlib.RegexReplaceFunc,
-		"rsadecrypt":      crypto.RsaDecryptFunc,
-		"setintersection": stdlib.SetIntersectionFunc,
-		"setproduct":      stdlib.SetProductFunc,
-		"setunion":        stdlib.SetUnionFunc,
-		"sha1":            crypto.Sha1Func,
-		"sha256":          crypto.Sha256Func,
-		"sha512":          crypto.Sha512Func,
-		"signum":          stdlib.SignumFunc,
-		"slice":           stdlib.SliceFunc,
-		"sort":            stdlib.SortFunc,
-		"split":           stdlib.SplitFunc,
-		"strrev":          stdlib.ReverseFunc,
-		"substr":          stdlib.SubstrFunc,
-		"timestamp":       TimestampFunc,
-		"timeadd":         stdlib.TimeAddFunc,
-		"title":           stdlib.TitleFunc,
-		"trim":            stdlib.TrimFunc,
-		"trimprefix":      stdlib.TrimPrefixFunc,
-		"trimspace":       stdlib.TrimSpaceFunc,
-		"trimsuffix":      stdlib.TrimSuffixFunc,
-		"try":             tryfunc.TryFunc,
-		"upper":           stdlib.UpperFunc,
-		"urlencode":       encoding.URLEncodeFunc,
-		"uuidv4":          uuid.V4Func,
-		"uuidv5":          uuid.V5Func,
-		"values":          stdlib.ValuesFunc,
-		"vault":           VaultFunc,
-		"yamldecode":      ctyyaml.YAMLDecodeFunc,
-		"yamlencode":      ctyyaml.YAMLEncodeFunc,
-		"yaml2json":       YAML2JsonFunc,
-		"zipmap":          stdlib.ZipmapFunc,
-		"compliment":      ComplimentFunction,
-		"env":             EnvFunction,
-		"tostring":        MakeToFunc(cty.String),
-		"tonumber":        MakeToFunc(cty.Number),
-		"tobool":          MakeToFunc(cty.Bool),
-		"toset":           MakeToFunc(cty.Set(cty.DynamicPseudoType)),
-		"tolist":          MakeToFunc(cty.List(cty.DynamicPseudoType)),
-		"tomap":           MakeToFunc(cty.Map(cty.DynamicPseudoType)),
+		"alltrue":          AllTrueFunc,
+		"anytrue":          AnyTrueFunc,
+		"abs":              stdlib.AbsoluteFunc,
+		"abspath":          filesystem.AbsPathFunc,
+		"basename":         filesystem.BasenameFunc,
+		"base64decode":     encoding.Base64DecodeFunc,
+		"base64encode":     encoding.Base64EncodeFunc,
+		"bcrypt":           crypto.BcryptFunc,
+		"can":              tryfunc.CanFunc,
+		"ceil":             stdlib.CeilFunc,
+		"chomp":            stdlib.ChompFunc,
+		"chunklist":        stdlib.ChunklistFunc,
+		"cidrcontains":     CidrContainsFunc,
+		"cidrhost":         cidr.HostFunc,
+		"cidrnetmask":      cidr.NetmaskFunc,
+		"cidrsubnet":       cidr.SubnetFunc,
+		"cidrsubnets":      cidr.SubnetsFunc,
+		"coalesce":         collection.CoalesceFunc,
+		"coalescelist":     stdlib.CoalesceListFunc,
+		"compact":          stdlib.CompactFunc,
+		"concat":           stdlib.ConcatFunc,
+		"consul_key":       ConsulFunc,
+		"contains":         stdlib.ContainsFunc,
+		"convert":          typeexpr.ConvertFunc,
+		"csvdecode":        stdlib.CSVDecodeFunc,
+		"dirname":          filesystem.DirnameFunc,
+		"distinct":         stdlib.DistinctFunc,
+		"endswith":         EndsWithFunc,
+		"element":          stdlib.ElementFunc,
+		"file":             filesystem.MakeFileFunc(baseDir, false),
+		"fileexists":       filesystem.MakeFileExistsFunc(baseDir),
+		"fileset":          filesystem.MakeFileSetFunc(baseDir),
+		"flatten":          stdlib.FlattenFunc,
+		"floor":            stdlib.FloorFunc,
+		"format":           stdlib.FormatFunc,
+		"formatdate":       stdlib.FormatDateFunc,
+		"formatlist":       stdlib.FormatListFunc,
+		"indent":           stdlib.IndentFunc,
+		"index":            IndexFunc, // stdlib.IndexFunc is not compatible
+		"issensitive":      IsSensitiveFunc,
+		"join":             stdlib.JoinFunc,
+		"jsondecode":       stdlib.JSONDecodeFunc,
+		"jsonencode":       stdlib.JSONEncodeFunc,
+		"keys":             stdlib.KeysFunc,
+		"legacy_isotime":   LegacyIsotimeFunc,
+		"legacy_strftime":  LegacyStrftimeFunc,
+		"length":           LengthFunc,
+		"log":              stdlib.LogFunc,
+		"lookup":           stdlib.LookupFunc,
+		"lower":            stdlib.LowerFunc,
+		"matchkeys":        MatchkeysFunc,
+		"max":              stdlib.MaxFunc,
+		"md5":              crypto.Md5Func,
+		"merge":            stdlib.MergeFunc,
+		"min":              stdlib.MinFunc,
+		"nonsensitive":     NonsensitiveFunc,
+		"parseint":         stdlib.ParseIntFunc,
+		"pathexpand":       filesystem.PathExpandFunc,
+		"pow":              stdlib.PowFunc,
+		"range":            stdlib.RangeFunc,
+		"regex":            stdlib.RegexFunc,
+		"regexall":         stdlib.RegexAllFunc,
+		"regex_replace":    stdlib.RegexReplaceFunc,
+		"replace":          stdlib.ReplaceFunc,
+		"reverse":          stdlib.ReverseListFunc,
+		"rsadecrypt":       crypto.RsaDecryptFunc,
+		"sensitive":        SensitiveFunc,
+		"setintersection":  stdlib.SetIntersectionFunc,
+		"setproduct":       stdlib.SetProductFunc,
+		"setsubtract":      stdlib.SetSubtractFunc,
+		"setunion":         stdlib.SetUnionFunc,
+		"sha1":             crypto.Sha1Func,
+		"sha256":           crypto.Sha256Func,
+		"sha512":           crypto.Sha512Func,
+		"signum":           stdlib.SignumFunc,
+		"slice":            stdlib.SliceFunc,
+		"sort":             stdlib.SortFunc,
+		"split":            stdlib.SplitFunc,
+		"startswith":       StartsWithFunc,
+		"strcontains":      StrContainsFunc,
+		"strrev":           stdlib.ReverseFunc,
+		"substr":           stdlib.SubstrFunc,
+		"sum":              SumFunc,
+		"textdecodebase64": TextDecodeBase64Func,
+		"textencodebase64": TextEncodeBase64Func,
+		"timestamp":        TimestampFunc,
+		"timeadd":          stdlib.TimeAddFunc,
+		"timecmp":          TimeCmpFunc,
+		"title":            stdlib.TitleFunc,
+		"transpose":        TransposeFunc,
+		"trim":             stdlib.TrimFunc,
+		"trimprefix":       stdlib.TrimPrefixFunc,
+		"trimspace":        stdlib.TrimSpaceFunc,
+		"trimsuffix":       stdlib.TrimSuffixFunc,
+		"try":              tryfunc.TryFunc,
+		"upper":            stdlib.UpperFunc,
+		"urlencode":        URLEncodeFunc,
+		"urldecode":        URLDecodeFunc,
+		"uuid":             UUIDFunc,
+		"uuidv4":           uuid.V4Func,
+		"uuidv5":           uuid.V5Func,
+		"values":           stdlib.ValuesFunc,
+		"vault":            VaultFunc,
+		"yamldecode":       ctyyaml.YAMLDecodeFunc,
+		"yamlencode":       ctyyaml.YAMLEncodeFunc,
+		"yaml2json":        YAML2JsonFunc,
+		"zipmap":           stdlib.ZipmapFunc,
+		"compliment":       ComplimentFunction,
+		"env":              EnvFunction,
+		"tostring":         MakeToFunc(cty.String),
+		"tonumber":         MakeToFunc(cty.Number),
+		"tobool":           MakeToFunc(cty.Bool),
+		"toset":            MakeToFunc(cty.Set(cty.DynamicPseudoType)),
+		"tolist":           MakeToFunc(cty.List(cty.DynamicPseudoType)),
+		"tomap":            MakeToFunc(cty.Map(cty.DynamicPseudoType)),
 	}
 	return r
 }
-
-var ComplimentFunction = function.New(&function.Spec{
-	Description: "Return the compliment of list1 and all otherLists.",
-	Params: []function.Parameter{
-		{
-			Name:             "list1",
-			Description:      "the first list, will return all elements that in this list but not in any of other lists.",
-			Type:             cty.Set(cty.DynamicPseudoType),
-			AllowDynamicType: true,
-		},
-	},
-	VarParam: &function.Parameter{
-		Name:             "otherList",
-		Description:      "other_list",
-		Type:             cty.Set(cty.DynamicPseudoType),
-		AllowDynamicType: true,
-	},
-	Type:         setOperationReturnType,
-	RefineResult: refineNonNull,
-	Impl: setOperationImpl(func(s1, s2 cty.ValueSet) cty.ValueSet {
-		return s1.Subtract(s2)
-	}, false),
-})
 
 var EnvFunction = function.New(&function.Spec{
 	Description: "Read environment variable, return empty string if the variable is not set.",
@@ -274,143 +264,6 @@ var ConsulFunc = function.New(&function.Spec{
 	},
 })
 
-// IndexFunc constructs a function that finds the element index for a given value in a list.
-var IndexFunc = function.New(&function.Spec{
-	Params: []function.Parameter{
-		{
-			Name: "list",
-			Type: cty.DynamicPseudoType,
-		},
-		{
-			Name: "value",
-			Type: cty.DynamicPseudoType,
-		},
-	},
-	Type: function.StaticReturnType(cty.Number),
-	Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
-		if !(args[0].Type().IsListType() || args[0].Type().IsTupleType()) {
-			return cty.NilVal, errors.New("argument must be a list or tuple")
-		}
-
-		if !args[0].IsKnown() {
-			return cty.UnknownVal(cty.Number), nil
-		}
-
-		if args[0].LengthInt() == 0 { // Easy path
-			return cty.NilVal, errors.New("cannot search an empty list")
-		}
-
-		for it := args[0].ElementIterator(); it.Next(); {
-			i, v := it.Element()
-			eq, err := stdlib.Equal(v, args[1])
-			if err != nil {
-				return cty.NilVal, err
-			}
-			if !eq.IsKnown() {
-				return cty.UnknownVal(cty.Number), nil
-			}
-			if eq.True() {
-				return i, nil
-			}
-		}
-		return cty.NilVal, errors.New("item not found")
-
-	},
-})
-
-// LegacyIsotimeFunc constructs a function that returns a string representation
-// of the current date and time using golang's datetime formatting.
-var LegacyIsotimeFunc = function.New(&function.Spec{
-	Params: []function.Parameter{},
-	VarParam: &function.Parameter{
-		Name: "format",
-		Type: cty.String,
-	},
-	Type: function.StaticReturnType(cty.String),
-	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
-		if len(args) > 1 {
-			return cty.StringVal(""), fmt.Errorf("too many values, 1 needed: %v", args)
-		} else if len(args) == 0 {
-			return cty.StringVal(InitTime.Format(time.RFC3339)), nil
-		}
-		format := args[0].AsString()
-		return cty.StringVal(InitTime.Format(format)), nil
-	},
-})
-
-// LegacyStrftimeFunc constructs a function that returns a string representation
-// of the current date and time using golang's strftime datetime formatting.
-var LegacyStrftimeFunc = function.New(&function.Spec{
-	Params: []function.Parameter{},
-	VarParam: &function.Parameter{
-		Name: "format",
-		Type: cty.String,
-	},
-	Type: function.StaticReturnType(cty.String),
-	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
-		if len(args) > 1 {
-			return cty.StringVal(""), fmt.Errorf("too many values, 1 needed: %v", args)
-		} else if len(args) == 0 {
-			return cty.StringVal(InitTime.Format(time.RFC3339)), nil
-		}
-		format := args[0].AsString()
-		return cty.StringVal(strftime.Format(format, InitTime)), nil
-	},
-})
-
-var LengthFunc = function.New(&function.Spec{
-	Params: []function.Parameter{
-		{
-			Name:             "value",
-			Type:             cty.DynamicPseudoType,
-			AllowDynamicType: true,
-			AllowUnknown:     true,
-		},
-	},
-	Type: func(args []cty.Value) (cty.Type, error) {
-		collTy := args[0].Type()
-		switch {
-		case collTy == cty.String || collTy.IsTupleType() || collTy.IsObjectType() || collTy.IsListType() || collTy.IsMapType() || collTy.IsSetType() || collTy == cty.DynamicPseudoType:
-			return cty.Number, nil
-		default:
-			return cty.Number, errors.New("argument must be a string, a collection type, or a structural type")
-		}
-	},
-	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
-		coll := args[0]
-		collTy := args[0].Type()
-		switch {
-		case collTy == cty.DynamicPseudoType:
-			return cty.UnknownVal(cty.Number), nil
-		case collTy.IsTupleType():
-			l := len(collTy.TupleElementTypes())
-			return cty.NumberIntVal(int64(l)), nil
-		case collTy.IsObjectType():
-			l := len(collTy.AttributeTypes())
-			return cty.NumberIntVal(int64(l)), nil
-		case collTy == cty.String:
-			// We'll delegate to the cty stdlib strlen function here, because
-			// it deals with all of the complexities of tokenizing unicode
-			// grapheme clusters.
-			return stdlib.Strlen(coll)
-		case collTy.IsListType() || collTy.IsSetType() || collTy.IsMapType():
-			return coll.Length(), nil
-		default:
-			// Should never happen, because of the checks in our Type func above
-			return cty.UnknownVal(cty.Number), errors.New("impossible value type for length(...)")
-		}
-	},
-})
-
-// TimestampFunc constructs a function that returns a string representation of the current date and time.
-var TimestampFunc = function.New(&function.Spec{
-	Params: []function.Parameter{},
-	Type:   function.StaticReturnType(cty.String),
-	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
-		return cty.StringVal(time.Now().UTC().Format(time.RFC3339)), nil
-	},
-})
-
 // VaultFunc constructs a function that retrieves KV secrets from HC vault
 var VaultFunc = function.New(&function.Spec{
 	Params: []function.Parameter{
@@ -431,93 +284,5 @@ var VaultFunc = function.New(&function.Spec{
 		val, err := commontpl.Vault(path, key)
 
 		return cty.StringVal(val), err
-	},
-})
-
-var YAML2JsonFunc = function.New(&function.Spec{
-	Params: []function.Parameter{
-		{
-			Name: "src",
-			Type: cty.String,
-		},
-	},
-	Type: func(args []cty.Value) (cty.Type, error) {
-		if !args[0].IsKnown() {
-			return cty.DynamicPseudoType, nil
-		}
-		if args[0].IsNull() {
-			return cty.NilType, function.NewArgErrorf(0, "YAML source code cannot be null")
-		}
-		return cty.String, nil
-	},
-	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
-		json, err := yaml2json.Convert([]byte(args[0].AsString()))
-		if err != nil {
-			return cty.NilVal, err
-		}
-		return cty.StringVal(string(json)), nil
-	},
-})
-
-// AllTrueFunc constructs a function that returns true if all elements of the
-// list are true. If the list is empty, return true.
-var AllTrueFunc = function.New(&function.Spec{
-	Params: []function.Parameter{
-		{
-			Name: "list",
-			Type: cty.List(cty.Bool),
-		},
-	},
-	Type: function.StaticReturnType(cty.Bool),
-	Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
-		result := cty.True
-		for it := args[0].ElementIterator(); it.Next(); {
-			_, v := it.Element()
-			if !v.IsKnown() {
-				return cty.UnknownVal(cty.Bool), nil
-			}
-			if v.IsNull() {
-				return cty.False, nil
-			}
-			result = result.And(v)
-			if result.False() {
-				return cty.False, nil
-			}
-		}
-		return result, nil
-	},
-})
-
-// AnyTrueFunc constructs a function that returns true if any element of the
-// list is true. If the list is empty, return false.
-var AnyTrueFunc = function.New(&function.Spec{
-	Params: []function.Parameter{
-		{
-			Name: "list",
-			Type: cty.List(cty.Bool),
-		},
-	},
-	Type: function.StaticReturnType(cty.Bool),
-	Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
-		result := cty.False
-		var hasUnknown bool
-		for it := args[0].ElementIterator(); it.Next(); {
-			_, v := it.Element()
-			if !v.IsKnown() {
-				hasUnknown = true
-				continue
-			}
-			if v.IsNull() {
-				continue
-			}
-			result = result.Or(v)
-			if result.True() {
-				return cty.True, nil
-			}
-		}
-		if hasUnknown {
-			return cty.UnknownVal(cty.Bool), nil
-		}
-		return result, nil
 	},
 })
