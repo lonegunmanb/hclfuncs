@@ -98,7 +98,7 @@ func Functions(baseDir string) map[string]function.Function {
 		"regex":            stdlib.RegexFunc,
 		"regexall":         stdlib.RegexAllFunc,
 		"regex_replace":    stdlib.RegexReplaceFunc,
-		"replace":          stdlib.ReplaceFunc,
+		"replace":          ReplaceFunc,
 		"reverse":          stdlib.ReverseListFunc,
 		"rsadecrypt":       crypto.RsaDecryptFunc,
 		"sensitive":        SensitiveFunc,
