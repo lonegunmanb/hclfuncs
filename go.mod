@@ -12,7 +12,7 @@ require (
 	github.com/hashicorp/packer-plugin-sdk v0.5.4
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/timandy/routine v1.1.4
 	github.com/zclconf/go-cty v1.15.0
 	github.com/zclconf/go-cty-yaml v1.0.3
