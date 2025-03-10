@@ -1,6 +1,7 @@
 module github.com/lonegunmanb/hclfuncs
 
 go 1.22
+toolchain go1.23.7
 
 require (
 	codeberg.org/6543/go-yaml2json v1.0.0
@@ -16,7 +17,7 @@ require (
 	github.com/timandy/routine v1.1.4
 	github.com/zclconf/go-cty v1.16.2
 	github.com/zclconf/go-cty-yaml v1.1.0
-	golang.org/x/text v0.21.0
+	golang.org/x/text v0.23.0
 )
 
 require (
@@ -56,7 +57,7 @@ require (
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
