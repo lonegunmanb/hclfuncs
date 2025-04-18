@@ -17,7 +17,7 @@ require (
 	github.com/timandy/routine v1.1.5
 	github.com/zclconf/go-cty v1.16.2
 	github.com/zclconf/go-cty-yaml v1.1.0
-	golang.org/x/text v0.22.0
+	golang.org/x/text v0.24.0
 )
 
 require (
@@ -57,7 +57,7 @@ require (
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
