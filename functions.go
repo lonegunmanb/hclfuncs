@@ -101,6 +101,7 @@ func Functions(baseDir string) map[string]function.Function {
 		"replace":          ReplaceFunc,
 		"reverse":          stdlib.ReverseListFunc,
 		"rsadecrypt":       crypto.RsaDecryptFunc,
+		"semvercheck":      SemverCheck,
 		"sensitive":        SensitiveFunc,
 		"setintersection":  stdlib.SetIntersectionFunc,
 		"setproduct":       stdlib.SetProductFunc,
