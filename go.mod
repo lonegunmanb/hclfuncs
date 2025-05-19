@@ -15,7 +15,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/timandy/routine v1.1.5
-	github.com/zclconf/go-cty v1.16.2
+	github.com/zclconf/go-cty v1.16.3
 	github.com/zclconf/go-cty-yaml v1.1.0
 	golang.org/x/text v0.25.0
 )
