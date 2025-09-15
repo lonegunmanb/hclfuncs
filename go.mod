@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/hashicorp/go-version v1.7.0
 	github.com/hashicorp/hcl/v2 v2.24.0
-	github.com/hashicorp/packer-plugin-sdk v0.6.2
+	github.com/hashicorp/packer-plugin-sdk v0.6.3
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
