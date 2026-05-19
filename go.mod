@@ -4,7 +4,7 @@ go 1.25.10
 
 require (
 	codeberg.org/6543/go-yaml2json v1.0.0
-	github.com/apparentlymart/go-cidr v1.1.0
+	github.com/apparentlymart/go-cidr v1.1.1
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/go-cty-funcs v0.0.0-20230405223818-a090f58aa992
 	github.com/hashicorp/go-uuid v1.0.3
