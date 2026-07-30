@@ -6,7 +6,7 @@ require (
 	codeberg.org/6543/go-yaml2json v1.0.0
 	github.com/apparentlymart/go-cidr v1.1.1
 	github.com/google/uuid v1.6.0
-	github.com/hashicorp/go-cty-funcs v0.0.0-20230405223818-a090f58aa992
+	github.com/hashicorp/go-cty-funcs v0.1.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/hashicorp/go-version v1.9.0
 	github.com/hashicorp/hcl/v2 v2.24.0
@@ -38,7 +38,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.32.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.36.0 // indirect
 	github.com/aws/smithy-go v1.22.5 // indirect
-	github.com/bmatcuk/doublestar v1.1.5 // indirect
+	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/color v1.16.0 // indirect
