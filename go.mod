@@ -16,7 +16,7 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/timandy/routine v1.1.6
 	github.com/zclconf/go-cty v1.17.0
-	github.com/zclconf/go-cty-yaml v1.1.0
+	github.com/zclconf/go-cty-yaml v1.2.0
 	golang.org/x/text v0.32.0
 )
 
